@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from sklearn.mixture import GaussianMixture
 import yfinance as yf
+import matplotlib.pyplot as plt
 
 from numpy.typing import ArrayLike
 
@@ -19,7 +20,7 @@ class GaussianMixtureModel:
         """Initialize the GMM model
 
         Args:
-            n_components: int. 
+            n_components: int.
                 The number of components (Gaussian distributions) in the mixture.
             X: array-like of shape (n_samples, n_features). 
                 The input data. Each row is a single sample.
@@ -90,8 +91,7 @@ class GaussianMixtureModel:
         """
         return self.model.bic(self.X)
 
-
-    def plot_aic_bic(X: ArrayLike): 
+    def plot_aic_bic(self, X: ArrayLike):
         """Plot AIC and BIC scores for different numbers of components in a GMM.
 
         Args:
@@ -100,8 +100,9 @@ class GaussianMixtureModel:
         """
 
         n_components = np.arange(1, 21)
-        models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(X) for n in n_components]
-    
+        models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(
+            X) for n in n_components]
+
         plt.plot(n_components, [m.bic(X) for m in models], label='BIC')
         plt.plot(n_components, [m.aic(X) for m in models], label='AIC')
         plt.legend(loc='best')
@@ -109,7 +110,6 @@ class GaussianMixtureModel:
         plt.ylabel('Information Criteria')
         plt.title('AIC and BIC Scores for Gaussian Mixture Models')
         plt.show()
-
 
 
 if __name__ == '__main__':
@@ -123,4 +123,4 @@ if __name__ == '__main__':
     print(gmm.predict(data))
 
     # Plot AIC and BIC scores to find the optimal number of components
-    plot_aic_bic(data)
+    gmm.plot_aic_bic(data)
