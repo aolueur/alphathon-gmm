@@ -28,8 +28,6 @@ class GaussianMixtureModel:
         """Initialize the GMM model
 
         Args:
-            n_components: int.
-                The number of components (Gaussian distributions) in the mixture.
             X: array-like of shape (n_samples, n_features).
                 The input data. Each row is a single sample.
         """
