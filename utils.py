@@ -109,7 +109,7 @@ def plot_aic_bic(X: ArrayLike):
         The input data. Each row is a single sample.
     """
 
-    n_components = np.arange(1, 21)
+    n_components = np.arange(1, 11)
     models = [
         GaussianMixture(n, covariance_type='full', random_state=0).fit(X)
         for n in n_components
