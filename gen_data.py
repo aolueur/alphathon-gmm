@@ -1,13 +1,19 @@
-from DataPreprocessing import TimeSeriesDataHandler
+"""
+This module generates the data to be fed into the GMM model.
+
+The processed data is saved in the './clean_data/factor_returns.csv' file.
+"""
+
+from utils import TimeSeriesDataHandler
 
 
 def main():
     # define the file paths for the input and output files
-    filepath_return = ['F-F_Momentum_Factor_daily.csv',
-                 'F-F_Research_Data_5_factors_2x3_daily.csv']
-    filepath_price = ['CPIAUCSL.csv']
+    filepath_return = ['./raw_data/F-F_Momentum_Factor_daily.csv',
+                       './raw_data/F-F_Research_Data_5_factors_2x3_daily.csv']
+    filepath_price = ['./raw_data/CPIAUCSL.csv']
     # Create an instance of the TimeSeriesDataHandler
-    ts_data_handler = TimeSeriesDataHandler(filepath_return,filepath_price)
+    ts_data_handler = TimeSeriesDataHandler(filepath_return, filepath_price)
 
     # Load the return data from the input files
     ts_data_handler.load_return_data()
@@ -29,13 +35,14 @@ def main():
     ts_data_handler.add_ticker_data(['XLY', 'XLP', 'XLE', 'XLF', 'XLV',
                                     'XLI', 'XLB', 'XLK', 'XLU'], '1984-01-01', '2024-07-31')
     # Get the merged datasets
-    
+
     df = ts_data_handler.merged_datasets()
 
-    with open('cleaned_data.csv', 'w') as csv_file:
+    with open('./clean_data/factor_returns.csv', 'w') as csv_file:
         df.to_csv(path_or_buf=csv_file)
 
     print(df)
+
 
 if __name__ == '__main__':
     main()
