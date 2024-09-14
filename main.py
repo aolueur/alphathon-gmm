@@ -10,3 +10,5 @@ gmm = GaussianMixtureModel(data)
 
 # Result
 print(gmm.predict(data))
+
+plot_aic_bic(data)
