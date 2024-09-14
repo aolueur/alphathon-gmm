@@ -31,7 +31,7 @@ class GaussianMixtureModel:
             X: array-like of shape (n_samples, n_features).
                 The input data. Each row is a single sample.
             n_components: int, optional. Default=None.
-                If provided, the model will be fitted with this number of components; 
+                If provided, the model will be fitted with this number of components;
                 otherwise, the optimal number of components is determined by the BIC score.
         """
         self.X = X
@@ -66,11 +66,11 @@ class GaussianMixtureModel:
         """Predict the cluster for each sample in X
 
         Args:
-            X: array-like of shape (n_samples, n_features). 
+            X: array-like of shape (n_samples, n_features).
                 The input data. Each row is a single sample.
 
         Returns:
-            labels: array of shape (n_samples,). 
+            labels: array of shape (n_samples,).
                 The predicted cluster for each sample.
         """
         labels = self.model.predict(X)
@@ -81,7 +81,7 @@ class GaussianMixtureModel:
         """Get the weights of the Gaussian distributions
 
         Returns:
-            weights: array of shape (n_components, ). 
+            weights: array of shape (n_components, ).
                 The weights of each mixture component.
         """
         return self.model.weights_
@@ -90,7 +90,7 @@ class GaussianMixtureModel:
         """Get the means of the Gaussian distributions
 
         Returns:
-            means: array of shape (n_components, ). 
+            means: array of shape (n_components, ).
                 The means of each mixture component.
         """
         return self.model.means_
@@ -99,7 +99,7 @@ class GaussianMixtureModel:
         """Get the covariances of the Gaussian distributions
 
         Returns:
-            covariances: array of shape (n_components, n_features, n_features). 
+            covariances: array of shape (n_components, n_features, n_features).
                 The covariances of each mixture component.
         """
         return self.model.covariances_
