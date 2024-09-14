@@ -62,7 +62,7 @@ class GaussianMixtureModel:
         """
         return self.n_components
 
-    def predict(self, X: ArrayLike) -> np.ndarray:
+    def predict(self, X: ArrayLike) -> pd.Series:
         """Predict the cluster for each sample in X
 
         Args:
