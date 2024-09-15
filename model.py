@@ -40,7 +40,7 @@ class GaussianMixtureModel:
             self.n_components = n_components
         else:
             # Find the optimal number of components using BIC
-            n_components_candidates = np.arange(1, 21)
+            n_components_candidates = np.arange(1, 11)
             models = [GaussianMixture(n, covariance_type='full', random_state=0).fit(X)
                       for n in n_components_candidates]
             bics = [model.bic(X) for model in models]  # BIC for each model
