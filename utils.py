@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from sklearn.mixture import GaussianMixture
 
 from numpy.typing import ArrayLike
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 
 class TimeSeriesDataHandler:
@@ -44,7 +46,7 @@ class TimeSeriesDataHandler:
         """Clean the data by replacing missing values and filling forward"""
         for data in self.datasets:
             data.replace([-99.99, -999], pd.NA, inplace=True)
-            data.fillna(method='ffill', inplace=True)
+            data.ffill(inplace=True)
 
     def filter_before_date(self, date: str):
         """Filter data before a given date, yyyymmdd"""
@@ -97,7 +99,7 @@ class TimeSeriesDataHandler:
                 right_index=True,
                 how='left',
             )
-        merged_data.fillna(method='ffill', inplace=True)
+        merged_data.ffill(inplace=True)
         return merged_data[19:-1]
 
 
@@ -122,3 +124,26 @@ def plot_aic_bic(X: ArrayLike):
     plt.ylabel('Information Criteria')
     plt.title('AIC and BIC Scores for Gaussian Mixture Models')
     plt.show()
+
+
+def principal_component_analysis(data: pd.DataFrame, n_components: int) -> pd.DataFrame:
+    """ Perform Principal Component Analysis on the input data
+
+    Args:
+        data: array-like of shape (n_samples, n_features).
+            The input data. Each row is a single sample.
+
+    Returns:
+        array-like of shape (n_samples, n_features).
+            The transformed data.
+    """
+    # Standardize the data
+    scaler = StandardScaler()
+    data_scaled = scaler.fit_transform(data)
+
+    # Perform PCA
+    pca = PCA(n_components)
+    data_pca = pca.fit_transform(data_scaled)
+
+    # Return the transformed data
+    return pd.DataFrame(data_pca, index=data.index)
