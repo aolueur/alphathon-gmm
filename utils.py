@@ -228,7 +228,7 @@ def visualize_gmm_results(data: pd.Series):
 
     # Create a common legend
     legend_patches = [plt.Line2D([0], [0], color=color, lw=4, label=label) for label, color in class_colors.items()]
-    fig.legend(handles=legend_patches, title='Classes', bbox_to_anchor=(1.05, 0.5), loc='center left')
+    fig.legend(handles=legend_patches, title='Classes', bbox_to_anchor=(0.5, -0.05), loc='upper center', ncol=2)
 
     plt.tight_layout()
     plt.show()
