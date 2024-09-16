@@ -15,5 +15,9 @@ gmm = GaussianMixtureModel(data_pca)
 # Result
 print(gmm.n_components())
 predictions = gmm.predict(data_pca)
+predictions.name = 'Group'
+predictions.index.name = 'Date'
 
-visualize_gmm_results(predictions)
+# visualize_gmm_results(predictions)
+
+predictions.to_csv('./clean_data/labels.csv')
