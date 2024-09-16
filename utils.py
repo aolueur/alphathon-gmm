@@ -150,21 +150,16 @@ def principal_component_analysis(data: pd.DataFrame, n_components: int) -> pd.Da
     return pd.DataFrame(data_pca, index=data.index)
 
 
-
-import pandas as pd
-import matplotlib.pyplot as plt
-from collections import Counter
-
 def visualize_gmm_results(data: pd.Series):
     """
     Plots the most frequent classes for each month divided into three subplots based on GMM predictions.
 
-    - Args:
+    Args:
         data: The predicted cluster for each sample.
     """
-    
     # Prepare the data
-    prediction = pd.DataFrame(data).reset_index().rename(columns={'index': 'Date', 0: 'Group'})
+    prediction = pd.DataFrame(data).reset_index().rename(
+        columns={'index': 'Date', 0: 'Group'})
 
     # Convert the 'date' column to datetime if it's not already
     prediction['Date'] = pd.to_datetime(prediction['Date'])
@@ -173,10 +168,12 @@ def visualize_gmm_results(data: pd.Series):
     prediction['Year_Month'] = prediction['Date'].dt.to_period('M')
 
     # Determine the most frequent class for each month
-    most_frequent_class = prediction.groupby('Year_Month')['Group'].apply(lambda x: Counter(x).most_common(1)[0][0])
-    
+    most_frequent_class = prediction.groupby('Year_Month')['Group'].apply(
+        lambda x: Counter(x).most_common(1)[0][0])
+
     # Convert to a DataFrame for plotting
-    classification_result = most_frequent_class.reset_index(name='Most_Frequent_Class')
+    classification_result = most_frequent_class.reset_index(
+        name='Most_Frequent_Class')
 
     # Mapping classes to colors for visualization
     class_colors = {
@@ -196,14 +193,16 @@ def visualize_gmm_results(data: pd.Series):
     split_date2 = pd.Timestamp('2016-01-01')
 
     df_part1 = classification_result[classification_result['Year_Month'] < split_date1]
-    df_part2 = classification_result[(classification_result['Year_Month'] >= split_date1) & (classification_result['Year_Month'] < split_date2)]
+    df_part2 = classification_result[(classification_result['Year_Month'] >= split_date1) & (
+        classification_result['Year_Month'] < split_date2)]
     df_part3 = classification_result[classification_result['Year_Month'] >= split_date2]
 
     # Create subplots
     fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(15, 12), sharey=True)
 
     # Plot the first part
-    ax1.bar(df_part1['Year_Month'], height=1, color=[class_colors[cls] for cls in df_part1['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax1.bar(df_part1['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part1['Most_Frequent_Class']], width=25, edgecolor='none')
     ax1.set_title('Most Frequent Class per Month (1999-2007)')
     ax1.set_xlabel('Year')
     ax1.set_ylabel('Class')
@@ -211,7 +210,8 @@ def visualize_gmm_results(data: pd.Series):
     ax1.set_yticks([])
 
     # Plot the second part
-    ax2.bar(df_part2['Year_Month'], height=1, color=[class_colors[cls] for cls in df_part2['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax2.bar(df_part2['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part2['Most_Frequent_Class']], width=25, edgecolor='none')
     ax2.set_title('Most Frequent Class per Month (2008-2015)')
     ax2.set_xlabel('Year')
     ax2.set_ylabel('Class')
@@ -219,7 +219,8 @@ def visualize_gmm_results(data: pd.Series):
     ax2.set_yticks([])
 
     # Plot the third part
-    ax3.bar(df_part3['Year_Month'], height=1, color=[class_colors[cls] for cls in df_part3['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax3.bar(df_part3['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part3['Most_Frequent_Class']], width=25, edgecolor='none')
     ax3.set_title('Most Frequent Class per Month (2016-2024)')
     ax3.set_xlabel('Year')
     ax3.set_ylabel('Class')
@@ -227,8 +228,10 @@ def visualize_gmm_results(data: pd.Series):
     ax3.set_yticks([])
 
     # Create a common legend
-    legend_patches = [plt.Line2D([0], [0], color=color, lw=4, label=label) for label, color in class_colors.items()]
-    fig.legend(handles=legend_patches, title='Classes', bbox_to_anchor=(0.5, -0.05), loc='upper center', ncol=2)
+    legend_patches = [plt.Line2D([0], [0], color=color, lw=4, label=label)
+                      for label, color in class_colors.items()]
+    fig.legend(handles=legend_patches, title='Classes',
+               bbox_to_anchor=(0.5, -0.05), loc='upper center', ncol=2)
 
     plt.tight_layout()
     plt.show()
