@@ -2,6 +2,7 @@ import pandas as pd
 import yfinance as yf
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import Counter
 from sklearn.mixture import GaussianMixture
 
 from numpy.typing import ArrayLike
@@ -147,3 +148,90 @@ def principal_component_analysis(data: pd.DataFrame, n_components: int) -> pd.Da
 
     # Return the transformed data
     return pd.DataFrame(data_pca, index=data.index)
+
+
+def visualize_gmm_results(data: pd.Series):
+    """
+    Plots the most frequent classes for each month divided into three subplots based on GMM predictions.
+
+    Args:
+        data: The predicted cluster for each sample.
+    """
+    # Prepare the data
+    prediction = pd.DataFrame(data).reset_index().rename(
+        columns={'index': 'Date', 0: 'Group'})
+
+    # Convert the 'date' column to datetime if it's not already
+    prediction['Date'] = pd.to_datetime(prediction['Date'])
+
+    # Extract year and month for grouping
+    prediction['Year_Month'] = prediction['Date'].dt.to_period('M')
+
+    # Determine the most frequent class for each month
+    most_frequent_class = prediction.groupby('Year_Month')['Group'].apply(
+        lambda x: Counter(x).most_common(1)[0][0])
+
+    # Convert to a DataFrame for plotting
+    classification_result = most_frequent_class.reset_index(
+        name='Most_Frequent_Class')
+
+    # Mapping classes to colors for visualization
+    class_colors = {
+        0: '#58C9EF',  # Cyan
+        1: '#F3D403',  # Yellow
+        2: '#5E2D79',  # Purple
+        3: '#E94B3C',  # Red
+        4: '#34D399',  # Green
+        5: '#FFA500'   # Orange
+    }
+
+    # Convert 'Year_Month' to timestamp for plotting
+    classification_result['Year_Month'] = classification_result['Year_Month'].dt.to_timestamp()
+
+    # Split the data into three parts
+    split_date1 = pd.Timestamp('2008-01-01')
+    split_date2 = pd.Timestamp('2016-01-01')
+
+    df_part1 = classification_result[classification_result['Year_Month'] < split_date1]
+    df_part2 = classification_result[(classification_result['Year_Month'] >= split_date1) & (
+        classification_result['Year_Month'] < split_date2)]
+    df_part3 = classification_result[classification_result['Year_Month'] >= split_date2]
+
+    # Create subplots
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(15, 12), sharey=True)
+
+    # Plot the first part
+    ax1.bar(df_part1['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part1['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax1.set_title('Most Frequent Class per Month (1999-2007)')
+    ax1.set_xlabel('Year')
+    ax1.set_ylabel('Class')
+    ax1.set_ylim(0, 1)
+    ax1.set_yticks([])
+
+    # Plot the second part
+    ax2.bar(df_part2['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part2['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax2.set_title('Most Frequent Class per Month (2008-2015)')
+    ax2.set_xlabel('Year')
+    ax2.set_ylabel('Class')
+    ax2.set_ylim(0, 1)
+    ax2.set_yticks([])
+
+    # Plot the third part
+    ax3.bar(df_part3['Year_Month'], height=1, color=[class_colors[cls]
+            for cls in df_part3['Most_Frequent_Class']], width=25, edgecolor='none')
+    ax3.set_title('Most Frequent Class per Month (2016-2024)')
+    ax3.set_xlabel('Year')
+    ax3.set_ylabel('Class')
+    ax3.set_ylim(0, 1)
+    ax3.set_yticks([])
+
+    # Create a common legend
+    legend_patches = [plt.Line2D([0], [0], color=color, lw=4, label=label)
+                      for label, color in class_colors.items()]
+    fig.legend(handles=legend_patches, title='Classes',
+               bbox_to_anchor=(0.5, -0.05), loc='upper center', ncol=2)
+
+    plt.tight_layout()
+    plt.show()

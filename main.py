@@ -1,6 +1,6 @@
 import pandas as pd
 from model import GaussianMixtureModel
-from utils import principal_component_analysis
+from utils import principal_component_analysis, visualize_gmm_results
 
 
 # Load the data
@@ -14,4 +14,6 @@ gmm = GaussianMixtureModel(data_pca)
 
 # Result
 print(gmm.n_components())
-print(gmm.predict(data_pca))
+predictions = gmm.predict(data_pca)
+
+visualize_gmm_results(predictions)
