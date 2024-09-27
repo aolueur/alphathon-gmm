@@ -83,6 +83,41 @@ class DataSummaryGenerator:
 
         print(f"Mean and standard deviation summaries have been saved to {self.output_dir}.")
 
+
+    def generate_cov_corr_by_group(self):
+        """
+        Generates covariance and correlation matrices for each group in the data and saves them as separate CSV files.
+        
+        Outputs:
+        --------
+        covariance_Group.csv : CSV file for each group
+            The covariance matrix for each group in the 'Group' column.
+        
+        correlation_Group.csv : CSV file for each group
+            The correlation matrix for each group in the 'Group' column.
+        """
+        # Load the data
+        factor_with_label = self.load_data()
+
+        # Get the unique groups
+        groups = factor_with_label['Group'].unique()
+
+        for group in groups:
+            # Extract data for the current group, dropping the 'Group' column
+            group_data = factor_with_label[factor_with_label['Group'] == group].drop(columns=['Group'])
+
+            # Compute the covariance matrix
+            covariance_matrix = group_data.cov()
+
+            # Compute the correlation matrix
+            correlation_matrix = group_data.corr()
+
+            # Save the covariance and correlation matrices as separate CSV files
+            covariance_matrix.to_csv(f'{self.output_dir}/covariance_{group}.csv')
+            correlation_matrix.to_csv(f'{self.output_dir}/correlation_{group}.csv')
+
+        print(f"Covariance and correlation matrices for each group have been saved to {self.output_dir}.")
+
 # Example usage
 if __name__ == "__main__":
     # List of column names, including the 'Group' column, provided by the user
@@ -100,3 +135,6 @@ if __name__ == "__main__":
 
     # Generate the summary statistics and save them as CSV files
     summary_generator.generate_summary()
+
+    # Generate the covariance and correlation matrices by group
+    summary_generator.generate_cov_corr_by_group()
