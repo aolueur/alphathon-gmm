@@ -1,35 +1,12 @@
 import numpy as np
 import pandas as pd
+
 import matplotlib.pyplot as plt
 from mpt import MarkowitzPortfolio
+from utils import to_ticker, to_name
 
 market_conditions = ['0', '1', '2', '3', '4']
 
-# Sector ETF Name -> Ticker mapping
-to_ticker = {
-    'Consumer Discretionary': 'XLY',
-    'Consumer Staples': 'XLP',
-    'Energy': 'XLE',
-    'Financial': 'XLF',
-    'Health Care': 'XLV',
-    'Industrial': 'XLI',
-    'Technology': 'XLK',
-    'Materials': 'XLB',
-    'Utilities': 'XLU'
-}
-
-# Sector ETF Ticker -> Name mapping
-to_name = {
-    'XLY': 'Consumer Discretionary',
-    'XLP': 'Consumer Staples',
-    'XLE': 'Energy',
-    'XLF': 'Financial',
-    'XLV': 'Health Care',
-    'XLI': 'Industrial',
-    'XLK': 'Technology',
-    'XLB': 'Materials',
-    'XLU': 'Utilities'
-}
 
 # Load data
 sector_etf_names = list(to_name.values())

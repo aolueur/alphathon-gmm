@@ -92,3 +92,4 @@ if __name__ == '__main__':
     # print(predictor.get_prior_matrix())
     probabilities_df = pd.DataFrame(probability, index=after_index)
     print(probabilities_df)
+    probabilities_df.to_json('./clean_data/priors.json')

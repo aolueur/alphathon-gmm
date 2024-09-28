@@ -10,6 +10,33 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
+# Sector ETF Name -> Ticker mapping
+to_ticker = {
+    'Consumer Discretionary': 'XLY',
+    'Consumer Staples': 'XLP',
+    'Energy': 'XLE',
+    'Financial': 'XLF',
+    'Health Care': 'XLV',
+    'Industrial': 'XLI',
+    'Technology': 'XLK',
+    'Materials': 'XLB',
+    'Utilities': 'XLU'
+}
+
+# Sector ETF Ticker -> Name mapping
+to_name = {
+    'XLY': 'Consumer Discretionary',
+    'XLP': 'Consumer Staples',
+    'XLE': 'Energy',
+    'XLF': 'Financial',
+    'XLV': 'Health Care',
+    'XLI': 'Industrial',
+    'XLK': 'Technology',
+    'XLB': 'Materials',
+    'XLU': 'Utilities'
+}
+
+
 class TimeSeriesDataHandler:
     def __init__(self, filepath_return: list[str], filepath_price: list[str]):
         """Initialize the TimeSeriesDataHandler
