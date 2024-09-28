@@ -17,3 +17,26 @@ The `GaussianMixtureModel` class has the following methods:
 - `covariances(self)`: Returns the covariances of the components in the GMM model.
 - `bic(self)`: Returns the Bayesian Information Criterion (BIC) of the GMM model.
 - `aic(self)`: Returns the Akaike Information Criterion (AIC) of the GMM model.
+
+## Sector Ticker Mapping
+- XLY: Consumer Discretionary
+- XLP: Consumer Staples
+- XLE: Energy 
+- XLF: Financial
+- XLV: Health Care
+- XLI: Industrial
+- XLB: Materials
+- XLK: Technology
+- XLU: Utilities
+
+## A Note on Running `gen_*` Scripts
+THe `gen_*` scripts in the `gens` directory are used to generate data, summary, etc.. To run these scripts, run the following command from the root directory of the project:
+```
+python -m gens.gen_<script_name>
+```
+
+For example, to run the `gen_data.py` script, run the following command:
+```
+python -m gens.gen_data
+```
+Notice that you do not need to include the `.py` extension in the command.

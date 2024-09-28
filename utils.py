@@ -10,6 +10,33 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
 
+# Sector ETF Name -> Ticker mapping
+to_ticker = {
+    'Consumer Discretionary': 'XLY',
+    'Consumer Staples': 'XLP',
+    'Energy': 'XLE',
+    'Financial': 'XLF',
+    'Health Care': 'XLV',
+    'Industrial': 'XLI',
+    'Technology': 'XLK',
+    'Materials': 'XLB',
+    'Utilities': 'XLU'
+}
+
+# Sector ETF Ticker -> Name mapping
+to_name = {
+    'XLY': 'Consumer Discretionary',
+    'XLP': 'Consumer Staples',
+    'XLE': 'Energy',
+    'XLF': 'Financial',
+    'XLV': 'Health Care',
+    'XLI': 'Industrial',
+    'XLK': 'Technology',
+    'XLB': 'Materials',
+    'XLU': 'Utilities'
+}
+
+
 class TimeSeriesDataHandler:
     def __init__(self, filepath_return: list[str], filepath_price: list[str]):
         """Initialize the TimeSeriesDataHandler
@@ -235,3 +262,160 @@ def visualize_gmm_results(data: pd.Series):
 
     plt.tight_layout()
     plt.show()
+
+
+def generate_data(filepath_return: list[str], filepath_price: list[str]):
+    """Generate the data to be fed into the GMM model
+
+    Args:
+        filepath_return: list of str.
+            List of file paths for the return data.
+        filepath_price: list of str.
+            List of file paths for the price data.
+    """
+    # Create an instance of the TimeSeriesDataHandler
+    ts_data_handler = TimeSeriesDataHandler(filepath_return, filepath_price)
+
+    # Load the return data from the input files
+    ts_data_handler.load_return_data()
+
+    # Load the data price from the input files
+    ts_data_handler.load_price_data()
+
+    # Preprocess the data
+    ts_data_handler.clean_data()
+
+    # Filter data to remove entries before a certain year
+    ts_data_handler.filter_before_date('19981222')
+
+    # Download ticker data and add it to the datasets
+    # ts_data_handler.download_ticker_data(['XLC', 'XLY', 'XLP', 'XLE', 'XLF', 'XLV',
+    #                                       'XLI', 'XLB', 'XLRE', 'XLK', 'XLU', '^IQHGCPI'], '1984-01-01', '2023-07-31')
+
+    # Ddd ticker
+    ts_data_handler.add_ticker_data(['XLY', 'XLP', 'XLE', 'XLF', 'XLV',
+                                    'XLI', 'XLB', 'XLK', 'XLU'], '1984-01-01', '2024-07-31')
+    # Get the merged datasets
+
+    df = ts_data_handler.merged_datasets()
+
+    with open('./clean_data/factor_returns.csv', 'w') as csv_file:
+        df.to_csv(path_or_buf=csv_file)
+
+
+class DataSummaryGenerator:
+    """
+    A class to generate summary statistics (mean, standard deviation, covariance, and correlation)
+    for factor data with labels, and save the results to CSV files by group.
+    """
+
+    def __init__(self, factor_file, label_file, col_names, output_dir='clean_data', selected_factors=None):
+        """
+        Initializes the DataSummaryGenerator with file paths and column names.
+
+        Parameters:
+        -----------
+        factor_file : str
+            Path to the CSV file containing the factor data.
+        label_file : str
+            Path to the CSV file containing the labels.
+        col_names : list of str
+            List of column names for the combined factor and label data.
+        output_dir : str, optional
+            Directory where the output CSV files will be saved (default is 'clean_data').
+        selected_factors : list of str, optional
+            List of specific factor columns to include in covariance/correlation calculations.
+            If not provided, all factors will be used.
+        """
+        self.factor_file = factor_file
+        self.label_file = label_file
+        self.col_names = col_names
+        self.output_dir = output_dir
+        # Default to all except 'Group'
+        self.selected_factors = selected_factors if selected_factors else col_names[:-1]
+
+    def load_data(self):
+        """
+        Loads the factor data and labels, concatenates them, and applies the column names.
+
+        Returns:
+        --------
+        pd.DataFrame
+            A pandas DataFrame containing the concatenated factor data and labels with the specified column names.
+        """
+        # Load factor data and label data from CSV files
+        factor_data = pd.read_csv(self.factor_file, index_col=0)
+        label = pd.read_csv(self.label_file, index_col=0)
+
+        # Concatenate the factor data and labels horizontally (i.e., along columns)
+        factor_with_label = pd.concat([factor_data, label], axis=1)
+
+        # Assign user-provided column names to the concatenated DataFrame
+        factor_with_label.columns = self.col_names
+
+        return factor_with_label
+
+    def generate_summary(self):
+        """
+        Generates summary statistics (mean and standard deviation) grouped by the 'Group' column and saves them as CSV files.
+
+        Outputs:
+        --------
+        mean.csv : CSV file
+            The mean values of each factor by group.
+        stdv.csv : CSV file
+            The standard deviation of each factor by group.
+        """
+        # Load and prepare the concatenated factor and label data
+        factor_with_label = self.load_data()
+
+        # Group data by the 'Group' column and compute the mean for each group, then transpose the result
+        mean_summary = factor_with_label.groupby(['Group']).mean().T
+
+        # Group data by the 'Group' column and compute the standard deviation for each group, then transpose the result
+        stdv_summary = factor_with_label.groupby(['Group']).std().T
+
+        # Save the mean and standard deviation summaries to CSV files in the specified output directory
+        mean_summary.to_csv(f'{self.output_dir}/mean.csv', index=True)
+        stdv_summary.to_csv(f'{self.output_dir}/stdv.csv', index=True)
+
+        print(
+            f"Mean and standard deviation summaries have been saved to {self.output_dir}.")
+
+    def generate_cov_corr_by_group(self):
+        """
+        Generates covariance and correlation matrices for selected factors in each group and saves them as separate CSV files.
+
+        Outputs:
+        --------
+        covariance/covariance_Group.csv : CSV file for each group
+            The covariance matrix for the selected factors in each group.
+
+        correlation/correlation_Group.csv : CSV file for each group
+            The correlation matrix for the selected factors in each group.
+        """
+        # Load the data
+        factor_with_label = self.load_data()
+
+        # Get the unique groups
+        groups = factor_with_label['Group'].unique()
+
+        for group in groups:
+            # Extract data for the current group, and select only the relevant factors
+            group_data = factor_with_label[factor_with_label['Group']
+                                           == group][self.selected_factors]
+
+            # Compute the covariance matrix
+            covariance_matrix = group_data.cov()
+
+            # Compute the correlation matrix
+            correlation_matrix = group_data.corr()
+
+            # Save the covariance and correlation matrices as separate CSV files
+            covariance_matrix.to_csv(
+                f'{self.output_dir}/covariance_{group}.csv')
+            correlation_matrix.to_csv(
+                f'{self.output_dir}/correlation_{group}.csv')
+
+        print(
+            f"Covariance and correlation matrices for each group (based on selected factors) have been saved to {self.output_dir}/covariance and {self.output_dir}/correlation.")
