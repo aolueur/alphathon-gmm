@@ -2,39 +2,34 @@ import pandas as pd
 
 class DataSummaryGenerator:
     """
-    A class to generate summary statistics (mean and standard deviation) for factor data with labels.
-    
-    Attributes:
-    -----------
-    factor_file : str
-        Path to the CSV file containing the factor data.
-    label_file : str
-        Path to the CSV file containing the labels.
-    col_names : list of str
-        List of column names for the combined factor and label data.
-    output_dir : str
-        Directory where the output CSV files will be saved (default is 'clean_data').
+    A class to generate summary statistics (mean, standard deviation, covariance, and correlation)
+    for factor data with labels, and save the results to CSV files by group.
     """
     
-    def __init__(self, factor_file, label_file, col_names, output_dir='clean_data'):
+    def __init__(self, factor_file, label_file, col_names, output_dir='clean_data', selected_factors=None):
         """
         Initializes the DataSummaryGenerator with file paths and column names.
         
         Parameters:
         -----------
         factor_file : str
-            Path to the CSV file containing factor data.
+            Path to the CSV file containing the factor data.
         label_file : str
-            Path to the CSV file containing labels.
+            Path to the CSV file containing the labels.
         col_names : list of str
             List of column names for the combined factor and label data.
         output_dir : str, optional
             Directory where the output CSV files will be saved (default is 'clean_data').
+        selected_factors : list of str, optional
+            List of specific factor columns to include in covariance/correlation calculations.
+            If not provided, all factors will be used.
         """
         self.factor_file = factor_file
         self.label_file = label_file
         self.col_names = col_names
         self.output_dir = output_dir
+        self.selected_factors = selected_factors if selected_factors else col_names[:-1]  # Default to all except 'Group'
+
 
     def load_data(self):
         """
@@ -86,15 +81,15 @@ class DataSummaryGenerator:
 
     def generate_cov_corr_by_group(self):
         """
-        Generates covariance and correlation matrices for each group in the data and saves them as separate CSV files.
+        Generates covariance and correlation matrices for selected factors in each group and saves them as separate CSV files.
         
         Outputs:
         --------
-        covariance_Group.csv : CSV file for each group
-            The covariance matrix for each group in the 'Group' column.
+        covariance/covariance_Group.csv : CSV file for each group
+            The covariance matrix for the selected factors in each group.
         
-        correlation_Group.csv : CSV file for each group
-            The correlation matrix for each group in the 'Group' column.
+        correlation/correlation_Group.csv : CSV file for each group
+            The correlation matrix for the selected factors in each group.
         """
         # Load the data
         factor_with_label = self.load_data()
@@ -103,8 +98,8 @@ class DataSummaryGenerator:
         groups = factor_with_label['Group'].unique()
 
         for group in groups:
-            # Extract data for the current group, dropping the 'Group' column
-            group_data = factor_with_label[factor_with_label['Group'] == group].drop(columns=['Group'])
+            # Extract data for the current group, and select only the relevant factors
+            group_data = factor_with_label[factor_with_label['Group'] == group][self.selected_factors]
 
             # Compute the covariance matrix
             covariance_matrix = group_data.cov()
@@ -116,7 +111,8 @@ class DataSummaryGenerator:
             covariance_matrix.to_csv(f'{self.output_dir}/covariance_{group}.csv')
             correlation_matrix.to_csv(f'{self.output_dir}/correlation_{group}.csv')
 
-        print(f"Covariance and correlation matrices for each group have been saved to {self.output_dir}.")
+        print(f"Covariance and correlation matrices for each group (based on selected factors) have been saved to {self.output_dir}/covariance and {self.output_dir}/correlation.")
+
 
 # Example usage
 if __name__ == "__main__":
@@ -126,15 +122,17 @@ if __name__ == "__main__":
                  'Energy', 'Financial', 'Health Care', 'Industrial', 'Materials', 'Technology', 
                  'Utilities', 'Group']
 
+    # List of factors to include in covariance/correlation matrix calculations
+    selected_factors = ['Consumer Discretionary', 'Consumer Staples', 'Energy', 'Financial', 
+                        'Health Care', 'Industrial', 'Materials', 'Technology', 'Utilities']
+
     # Create an instance of the DataSummaryGenerator class with file paths and column names
     summary_generator = DataSummaryGenerator(
         factor_file='clean_data/factor_returns.csv',  # Path to the factor data file
         label_file='clean_data/labels.csv',           # Path to the label data file
-        col_names=col_names                           # List of column names for the combined data
+        col_names=col_names,                          # List of column names for the combined data
+        selected_factors=selected_factors             # List of specific factors to include
     )
 
-    # Generate the summary statistics and save them as CSV files
-    summary_generator.generate_summary()
-
-    # Generate the covariance and correlation matrices by group
+    # Generate the covariance and correlation matrices by group (only for the selected factors)
     summary_generator.generate_cov_corr_by_group()
