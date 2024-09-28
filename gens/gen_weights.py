@@ -1,9 +1,11 @@
+from utils import to_ticker, to_name
+from mpt import MarkowitzPortfolio
 import numpy as np
 import pandas as pd
-
 import matplotlib.pyplot as plt
-from mpt import MarkowitzPortfolio
-from utils import to_ticker, to_name
+import sys
+import os
+
 
 market_conditions = ['0', '1', '2', '3', '4']
 

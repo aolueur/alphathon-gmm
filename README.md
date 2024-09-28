@@ -28,3 +28,15 @@ The `GaussianMixtureModel` class has the following methods:
 - XLB: Materials
 - XLK: Technology
 - XLU: Utilities
+
+## A Note on Running `gen_*` Scripts
+THe `gen_*` scripts in the `gens` directory are used to generate data, summary, etc.. To run these scripts, run the following command from the root directory of the project:
+```
+python -m gens.gen_<script_name>
+```
+
+For example, to run the `gen_data.py` script, run the following command:
+```
+python -m gens.gen_data
+```
+Notice that you do not need to include the `.py` extension in the command.
