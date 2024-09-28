@@ -17,3 +17,14 @@ The `GaussianMixtureModel` class has the following methods:
 - `covariances(self)`: Returns the covariances of the components in the GMM model.
 - `bic(self)`: Returns the Bayesian Information Criterion (BIC) of the GMM model.
 - `aic(self)`: Returns the Akaike Information Criterion (AIC) of the GMM model.
+
+## Sector Ticker Mapping
+- XLY: Consumer Discretionary
+- XLP: Consumer Staples
+- XLE: Energy 
+- XLF: Financial
+- XLV: Health Care
+- XLI: Industrial
+- XLB: Materials
+- XLK: Technology
+- XLU: Utilities

@@ -20,5 +20,5 @@ predictions.index.name = 'Date'
 
 # visualize_gmm_results(predictions)
 
-predictions.to_csv('./clean_data/labels.csv')
-predictions.to_json('./clean_data/labels.json')
+# predictions.to_csv('./clean_data/labels.csv')
+# predictions.to_json('./clean_data/labels.json')
