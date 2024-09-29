@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 from utils import to_ticker
 import datetime
+import quantstats as qs
 
 
-def calculate_annualized_returns(start_date, end_date):
+def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
     # Load the data
     with open('./clean_data/optimal_weights.json') as f:
         optimal_weights = pd.read_json(f)
@@ -41,12 +42,17 @@ def calculate_annualized_returns(start_date, end_date):
 
     # Annualize the returns
     annualized_returns = np.mean(portfolio_returns) * 252
-
+    qs.reports.html(
+        returns=portfolio_returns / 100,
+        benchmark=benchmark,
+        output=output)
+    with open(output, 'r') as file:
+        HTML_content = file.read()
     return annualized_returns
 
 
 # Example usage
-START_DATE = datetime.date(2002, 1, 3)
-END_DATE = datetime.date(2024, 7, 30)
-annualized_returns = calculate_annualized_returns(START_DATE, END_DATE)
+start_date = datetime.date(2002, 1, 3)
+end_date = datetime.date(2024, 7, 30)
+annualized_returns = run_strategy(start_date, end_date, 'SPY', 'report.html')
 print(annualized_returns)
