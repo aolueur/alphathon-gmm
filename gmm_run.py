@@ -4,7 +4,7 @@ from utils import principal_component_analysis, visualize_gmm_results
 
 
 # Load the data
-data = pd.read_csv('./clean_data/factor_returns.csv', index_col=0)
+data = pd.read_csv('./clean_data/factor_log_returns.csv', index_col=0)
 
 # Perform PCA
 data_pca = principal_component_analysis(data, n_components=3)

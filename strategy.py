@@ -24,6 +24,8 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
     returns = returns.loc[start_date:end_date]
     priors = priors.loc[start_date -
                         pd.DateOffset(days=1):end_date - pd.DateOffset(days=1)]
+    print(returns.shape)
+    print(priors.shape)
 
     # extract columns that represent sector ETFs
     sector_tickers = list(to_ticker.values())
@@ -38,6 +40,7 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
     weighted_optimal_weights = np.dot(optimal_weights, priors.T).T
 
     # Calculate portfolio returns for each day
+
     portfolio_returns = np.sum(weighted_optimal_weights * returns, axis=1)
 
     # Annualize the returns
@@ -52,7 +55,7 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
 
 
 # Example usage
-start_date = datetime.date(2002, 1, 3)
-end_date = datetime.date(2024, 7, 30)
+start_date = datetime.date(2016, 1, 5)
+end_date = datetime.date(2019, 12, 30)
 annualized_returns = run_strategy(start_date, end_date, 'SPY', 'report.html')
 print(annualized_returns)
