@@ -4,9 +4,6 @@ This module generates the data to be fed into the GMM model.
 The processed data is saved in the './clean_data/factor_returns.csv' file.
 """
 import sys
-
-# setting path
-sys.path.append('../ALPHATHON-GMM')
 from utils import generate_data
 
 

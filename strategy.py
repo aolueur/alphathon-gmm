@@ -20,12 +20,12 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
     priors.index = pd.to_datetime(priors.index)
     returns.index = pd.to_datetime(returns.index)
 
-
     # Filter the data to the desired date range
     returns = returns.loc[start_date:end_date]
     priors = priors.loc[start_date -
-                        pd.DateOffset(days=1):end_date]
-    # print(priors)
+                        pd.DateOffset(days=1):end_date - pd.DateOffset(days=1)]
+    print(returns.shape)
+    print(priors.shape)
 
     # extract columns that represent sector ETFs
     sector_tickers = list(to_ticker.values())
@@ -55,7 +55,7 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
 
 
 # Example usage
-start_date = datetime.date(2016, 1, 1)
-end_date = datetime.date(2019, 12, 31)
+start_date = datetime.date(2016, 1, 5)
+end_date = datetime.date(2019, 12, 30)
 annualized_returns = run_strategy(start_date, end_date, 'SPY', 'report.html')
 print(annualized_returns)

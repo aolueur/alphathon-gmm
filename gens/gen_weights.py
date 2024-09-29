@@ -1,7 +1,4 @@
 import sys
-
-# setting path
-sys.path.append('../ALPHATHON-GMM')
 from utils import to_ticker, to_name
 from mpt import MarkowitzPortfolio
 import numpy as np
