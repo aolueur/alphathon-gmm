@@ -40,8 +40,7 @@ def calculate_annualized_returns(start_date, end_date):
     portfolio_returns = np.sum(weighted_optimal_weights * returns, axis=1)
 
     # Annualize the returns
-    annualized_returns = (1 + portfolio_returns /
-                          100).prod() ** (252 / len(portfolio_returns)) - 1
+    annualized_returns = np.mean(portfolio_returns) * 252
 
     return annualized_returns
 
