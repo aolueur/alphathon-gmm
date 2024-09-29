@@ -298,9 +298,11 @@ def generate_data(filepath_return: list[str], filepath_price: list[str]):
     # Get the merged datasets
 
     df = ts_data_handler.merged_datasets()
-
-    with open('./clean_data/factor_returns.csv', 'w') as csv_file:
+    df_normal_returns = (np.exp(df/100) - 1)*100
+    with open('./clean_data/factor_log_returns.csv', 'w') as csv_file:
         df.to_csv(path_or_buf=csv_file)
+    with open('./clean_data/factor_returns.csv', 'w') as csv_file:
+        df_normal_returns.to_csv(path_or_buf=csv_file)
 
 
 class DataSummaryGenerator:

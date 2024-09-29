@@ -43,6 +43,8 @@ class DataMerger:
         # Perform inner join and left join
         combined_partial = pd.merge(self.labels, self.data, on='Date', how='inner')
         combined_full = pd.merge(self.labels, self.data, on='Date', how='left')
+        combined_full = combined_full[combined_full['Date'] >= combined_partial['Date'][0]]
+        combined_full.ffill(inplace = True)
         
         # Save the merged data to CSV files
         combined_partial.to_csv(output_file_partial, index=False)
@@ -54,7 +56,7 @@ class DataMerger:
 if __name__ == "__main__":
     # File paths for input and output
     labels_file = './clean_data/labels.csv'
-    regimes_file = './clean_data/5_market_regimes.txt'
+    regimes_file = './clean_data/3_market_regimes.txt'
     output_file_partial = './clean_data/combined_partial.csv'
     output_file_full = './clean_data/combined_full.csv'
 

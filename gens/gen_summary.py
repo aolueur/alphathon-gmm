@@ -1,3 +1,7 @@
+import sys
+
+# setting path
+sys.path.append('../ALPHATHON-GMM')
 from utils import DataSummaryGenerator
 
 
