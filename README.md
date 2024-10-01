@@ -1,4 +1,18 @@
 # GMM Model and Strategy Implementation for Alphathon 2024
+
+- Team name: Big Red Big Purple
+- Elina (Fuwei) Zhuang: fz266@cornell.edu
+- Hudson Chen: hc884@cornell.edu
+- Shun Wang: sw2337@cornell.edu
+- Joshua (Yuanzhi) Ma: ym533@cornell.edu
+- Yuao Peng: yp439@cornell.edu
+- Wanqing Li: w.li@nyu.edu
+
+Problem worked on: Using Large Language Models (LLMs) in Investment
+
+A title for the solution/strategy: 2-D Bayesian Regime Switch
+
+---
 - [GMM Model and Strategy Implementation for Alphathon 2024](#gmm-model-and-strategy-implementation-for-alphathon-2024)
   - [Reproduction Guide](#reproduction-guide)
   - [GMM Model](#gmm-model)
