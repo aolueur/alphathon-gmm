@@ -25,4 +25,5 @@ if __name__ == "__main__":
     )
 
     # Generate the covariance and correlation matrices by group (only for the selected factors)
+    summary_generator.generate_summary()
     summary_generator.generate_cov_corr_by_group()
