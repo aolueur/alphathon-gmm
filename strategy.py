@@ -56,6 +56,6 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
 
 # Example usage
 start_date = datetime.date(2016, 1, 5)
-end_date = datetime.date(2019, 12, 30)
+end_date = datetime.date(2019, 12, 31)
 annualized_returns = run_strategy(start_date, end_date, 'SPY', 'report.html')
 print(annualized_returns)
