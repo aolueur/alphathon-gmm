@@ -43,11 +43,15 @@ python data_merge.py
 ```
 python -m gens.gen_summary
 ```
-7. Run the following command to generate Markowitz portfolio weights:
+7. Run the following command to generate S&P component stocks names, prices, and returns:
+```
+python -m gens.gen_sp500
+```
+8. Run the following command to generate Markowitz portfolio weights:
 ```
 python -m gens.gen_weights.py 
 ```
-8. Run the following command to generate the strategy returns:
+1. Run the following command to generate the strategy returns:
 ```
 python strategy.py
 ```
