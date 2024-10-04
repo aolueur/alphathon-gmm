@@ -17,11 +17,11 @@ to_ticker = {
     'Consumer Discretionary': 'XLY',
     'Consumer Staples': 'XLP',
     'Energy': 'XLE',
-    'Financial': 'XLF',
+    'Financials': 'XLF',
     'Health Care': 'XLV',
-    'Industrial': 'XLI',
-    'Technology': 'XLK',
+    'Industrials': 'XLI',
     'Materials': 'XLB',
+    'Information Technology': 'XLK',
     'Utilities': 'XLU'
 }
 
@@ -30,11 +30,11 @@ to_name = {
     'XLY': 'Consumer Discretionary',
     'XLP': 'Consumer Staples',
     'XLE': 'Energy',
-    'XLF': 'Financial',
+    'XLF': 'Financials',
     'XLV': 'Health Care',
-    'XLI': 'Industrial',
-    'XLK': 'Technology',
+    'XLI': 'Industrials',
     'XLB': 'Materials',
+    'XLK': 'Information Technology',
     'XLU': 'Utilities'
 }
 

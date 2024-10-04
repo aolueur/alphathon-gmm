@@ -47,11 +47,15 @@ python -m gens.gen_summary
 ```
 python -m gens.gen_sp500
 ```
-8. Run the following command to generate Markowitz portfolio weights:
+8. Run the following command to generate mean returns grouped sector in S&P 500:
+```
+python -m gens.gen_spsector_returns
+```
+9.  Run the following command to generate Markowitz portfolio weights:
 ```
 python -m gens.gen_weights.py 
 ```
-1. Run the following command to generate the strategy returns:
+10. Run the following command to generate the strategy returns:
 ```
 python strategy.py
 ```

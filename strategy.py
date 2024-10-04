@@ -13,7 +13,7 @@ def run_strategy(start_date, end_date, benchmark='SPY', output='report.html'):
     with open('./clean_data/priors.json') as f:
         priors = pd.read_json(f)
 
-    with open('./clean_data/factor_returns.csv') as f:
+    with open('./clean_data/sp500_sector_avg_returns.csv') as f:
         returns = pd.read_csv(f, index_col=0)
 
     # convert index to datetime
