@@ -352,7 +352,7 @@ class DataSummaryGenerator:
         label = pd.read_csv(self.label_file, index_col=0)
 
         # Concatenate the factor data and labels horizontally (i.e., along columns)
-        factor_with_label = pd.concat([factor_data, label], axis=1)
+        factor_with_label = pd.merge(factor_data, label, on='Date', how='inner')
 
         # Assign user-provided column names to the concatenated DataFrame
         factor_with_label.columns = self.col_names
