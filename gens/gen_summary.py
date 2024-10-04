@@ -7,12 +7,12 @@ if __name__ == "__main__":
     # List of column names, including the 'Group' column, provided by the user
     col_names = ['Momentum', 'Excess Return', 'Size', 'Value', 'Profitability', 'Investment',
                  'Interest Rate', 'Inflation', 'Consumer Discretionary', 'Consumer Staples',
-                 'Energy', 'Financial', 'Health Care', 'Industrial', 'Materials', 'Technology',
+                 'Energy', 'Financials', 'Health Care', 'Industrials', 'Materials', 'Information Technology',
                  'Utilities', 'Group']
 
     # List of factors to include in covariance/correlation matrix calculations
-    selected_factors = ['Consumer Discretionary', 'Consumer Staples', 'Energy', 'Financial',
-                        'Health Care', 'Industrial', 'Materials', 'Technology', 'Utilities']
+    selected_factors = ['Consumer Discretionary', 'Consumer Staples', 'Energy', 'Financials',
+                        'Health Care', 'Industrials', 'Materials', 'Information Technology', 'Utilities']
 
     # Create an instance of the DataSummaryGenerator class with file paths and column names
     summary_generator = DataSummaryGenerator(
