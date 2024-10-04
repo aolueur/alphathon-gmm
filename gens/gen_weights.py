@@ -36,7 +36,7 @@ for condition in market_conditions:
 
     # Calculate optimal weights
     weights[condition] = mp.optimize()
-    print(f'Optimal weights for condition {condition}:')
+    print(f'Optimal weights for condition {condition}:{weights[condition]}')
 
 pd.DataFrame(weights, index=sector_etf_names).to_json(
     './clean_data/optimal_weights.json')
