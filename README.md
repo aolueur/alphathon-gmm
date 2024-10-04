@@ -27,33 +27,33 @@ To reproduce the results of the project, follow the steps below:
 ```
 pip install -r requirements.txt
 ```
-3. Run the following command to generate the clean data:
-```
-python -m gens.gen_data
-```
-4. Run the following command to run the GMM model:
-```
-python gmm_run.py
-```
-5. Run the following command the merge the output of the GMM model with the market regimes offered by the LLM:
-```
-python data_merge.py
-```
-6. Run the following command to generate the summary of the GMM model:
-```
-python -m gens.gen_summary
-```
-7. Run the following command to generate S&P component stocks names, prices, and returns:
+3. Run the following command to generate S&P component stocks names, prices, and returns:
 ```
 python -m gens.gen_sp500
 ```
-8. Run the following command to generate mean returns grouped sector in S&P 500:
+4. Run the following command to generate mean returns grouped sector in S&P 500:
 ```
 python -m gens.gen_spsector_returns
 ```
+5. Run the following command to generate the clean data:
+```
+python -m gens.gen_data
+```
+6. Run the following command to run the GMM model:
+```
+python gmm_run.py
+```
+7. Run the following command the merge the output of the GMM model with the market regimes offered by the LLM:
+```
+python data_merge.py
+```
+8. Run the following command to generate the summary of the GMM model:
+```
+python -m gens.gen_summary
+```
 9.  Run the following command to generate Markowitz portfolio weights:
 ```
-python -m gens.gen_weights.py 
+python -m gens.gen_weights
 ```
 10. Run the following command to generate the strategy returns:
 ```
@@ -61,6 +61,11 @@ python strategy.py
 ```
 
 The last command will generate `./report.html` which contains the summary of the strategy returns.
+
+Or you can run the following command to run all the steps above (except for step 1 and 2):
+```
+sh run.sh
+```
 
 ## GMM Model
 
