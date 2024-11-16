@@ -58,17 +58,20 @@ class TimeSeriesDataHandler:
     def load_return_data(self):
         """Load the return data from the input files"""
         for filepath in self.filepath_return:
-            data = pd.read_csv(filepath, index_col=0, parse_dates=True)
-            data.index = pd.to_datetime(data.index, format='%Y%m%d')
-            data.index = data.index.strftime('%Y-%m-%d')
+            #data = pd.read_csv(filepath, header = True, parse_dates=True)
+            data = pd.read_csv(filepath, parse_dates=['Date'], index_col='Date', date_parser=lambda x: pd.to_datetime(x, format='%Y%m%d'))
+            #data["Date"] = pd.to_datetime(data.index, format='%Y%m%d')
+            #data.set_index("Date", inplace=True)
+            # data.index = data.index.strftime('%Y-%m-%d')
             self.datasets.append(data)
 
     def load_price_data(self):
         """Load the price data from the input files"""
         for filepath in self.filepath_price:
-            data = pd.read_csv(filepath, index_col=0, parse_dates=True)
-            data.index = pd.to_datetime(data.index, format='%Y%m%d')
-            data.index = data.index.strftime('%Y-%m-%d')
+            data = pd.read_csv(filepath, parse_dates=['Date'], index_col='Date')
+            # data = pd.read_csv(filepath, header = True,parse_dates=True)
+            # data["Date"] = pd.to_datetime(data.index, format='%Y%m%d')
+            # data.set_index("Date", inplace=True)
             data = (np.log(data) - np.log(data.shift(1))) * 100
             self.datasets.append(data)
 
@@ -77,6 +80,7 @@ class TimeSeriesDataHandler:
         for data in self.datasets:
             data.replace([-99.99, -999], pd.NA, inplace=True)
             data.ffill(inplace=True)
+
 
     def filter_before_date(self, date: str):
         """Filter data before a given date, yyyymmdd"""
@@ -97,7 +101,7 @@ class TimeSeriesDataHandler:
                 The end date in the format 'YYYY-MM-DD'."""
 
         ticker_data = yf.download(ticker, start=start_date, end=end_date)
-        ticker_data.index = ticker_data.index.strftime('%Y-%m-%d')
+        #ticker_data.index = ticker_data.index.strftime('%Y-%m-%d')
         close = ticker_data['Adj Close']
         return (np.log(close) - np.log(close.shift(1))) * 100
 
@@ -118,10 +122,13 @@ class TimeSeriesDataHandler:
             if ticker in ticker_data.columns:
                 self.datasets.append(ticker_data[ticker].rename(ticker))
 
-    def merged_datasets(self) -> pd.DataFrame:
+    def merged_datasets(self, frequency = "daily") -> pd.DataFrame:
         """Merge the datasets into a single DataFrame"""
+        for data in self.datasets:
+            data.index = data.index.tz_localize(None)
         merged_data = self.datasets[0]
         for data in self.datasets[1:]:
+
             merged_data = pd.merge(
                 merged_data,
                 data,
@@ -130,7 +137,12 @@ class TimeSeriesDataHandler:
                 how='left',
             )
         merged_data.ffill(inplace=True)
-        return merged_data[19:-1]
+        merged_data = merged_data.dropna()
+        if frequency == "Monthly":
+            return merged_data.resample("M").sum()
+        if frequency == "Weekly":
+            return merged_data.resample("W").sum()
+        return merged_data
 
 
 def plot_aic_bic(X: ArrayLike):
@@ -266,7 +278,7 @@ def visualize_gmm_results(data: pd.Series):
     plt.show()
 
 
-def generate_data(filepath_return: list[str], filepath_price: list[str]):
+def generate_data(filepath_return: list[str], filepath_price: list[str], frequency = "Daily"):
     """Generate the data to be fed into the GMM model
 
     Args:
@@ -299,11 +311,11 @@ def generate_data(filepath_return: list[str], filepath_price: list[str]):
                                     'XLI', 'XLB', 'XLK', 'XLU'], '1984-01-01', '2024-07-31')
     # Get the merged datasets
 
-    df = ts_data_handler.merged_datasets()
+    df = ts_data_handler.merged_datasets(frequency)
     df_normal_returns = (np.exp(df/100) - 1)*100
-    with open('./clean_data/factor_log_returns.csv', 'w') as csv_file:
+    with open(f'./clean_data/{frequency.lower()}_factor_log_returns.csv', 'w') as csv_file:
         df.to_csv(path_or_buf=csv_file)
-    with open('./clean_data/factor_returns.csv', 'w') as csv_file:
+    with open(f'./clean_data/{frequency.lower()}_factor_returns.csv', 'w') as csv_file:
         df_normal_returns.to_csv(path_or_buf=csv_file)
 
 
