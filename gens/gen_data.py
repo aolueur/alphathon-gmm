@@ -14,4 +14,6 @@ if __name__ == '__main__':
     ]
     filepath_price = ['./raw_data/CPIAUCSL.csv']
 
-    generate_data(filepath_return, filepath_price)
+    frequency = "Monthly"
+
+    generate_data(filepath_return, filepath_price, frequency)
